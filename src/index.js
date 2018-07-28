@@ -63,9 +63,9 @@ const User = sequelize.define('users', {
 });
 
 // Post table model
-Post.sync({force:true});
+sequelize.sync({force:true});
 
-const Post = sequelize.define('posts', {
+const Posts = sequelize.define('posts', {
     title: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -84,12 +84,12 @@ const Post = sequelize.define('posts', {
         type: Sequelize.STRING,
     },
     authorID: {
-        type: Sequelize.INTEGER
-    //     },
+        type: Sequelize.INTEGER,
+        allowNull: false
+    }
     // references: {
     //     model: 'users',
     //     key: 'id'
-    }
   },
   {
     timeStamps: false,
