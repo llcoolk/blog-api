@@ -23,7 +23,7 @@ sequelize
     console.error('Unable to connect to the database:', err);
   });
 
-//sequelize.sync({force: true})
+// sequelize.sync({force: true})
 // User tabel model
 const User = sequelize.define('User', {
     firstName: {
@@ -119,19 +119,19 @@ app.post('/posts', (req, res) => {
 
     console.log("[posts]", req.body);
 
-    Posts.create(posts)
+    Post.create(posts)
     .then( posts => res.json( posts))
     .catch( err => res.json({Error: err}));
 
 });
 
 // posts.create(
-//     {
-//         title: "I know what you did last night!",
-//         description: "But I won't tell your mommy~",
-//         imageUrl: './assets/placeholder.png',
-//         authorID: 1
-//     }
+    {
+        title: "I know what you did last night!",
+        description: "But I won't tell your mommy~",
+        imageUrl: './assets/placeholder.png',
+        authorID: 1
+    }
 // );
 
 app.put('/posts/:id', (req, res) => {
