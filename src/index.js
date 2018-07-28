@@ -25,7 +25,7 @@ sequelize
 
 //sequelize.sync({force: true})
 // User tabel model
-const User = sequelize.define('users', {
+const User = sequelize.define('User', {
     firstName: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -63,9 +63,9 @@ const User = sequelize.define('users', {
 });
 
 // Post table model
-sequelize.sync({force:true});
+// sequelize.sync({force:true});
 
-const Posts = sequelize.define('posts', {
+const Post = sequelize.define('Post', {
     title: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -89,7 +89,7 @@ const Posts = sequelize.define('posts', {
     }
 //     ,
 //     references: {
-//         model: 'users',
+//         model: 'User',
 //         key: 'id'
 //   }
 },
@@ -117,17 +117,22 @@ app.post('/posts', (req, res) => {
         authorID: req.body.authorID
     };
 
-    Posts.sync({force: true}).then(() => {
-        return posts.create(
-        {
-            title: "I know what you did last night!",
-            description: "But I won't tell your mommy~",
-            imageUrl: './assets/placeholder.png',
-            authorID: 1
-        }
-        );
-    });
+    console.log("[posts", req.body);
+
+    Posts.create(posts)
+    .then( posts => res.json( posts))
+    .catch( err => res.json({Error: err}));
+
 });
+
+// posts.create(
+//     {
+//         title: "I know what you did last night!",
+//         description: "But I won't tell your mommy~",
+//         imageUrl: './assets/placeholder.png',
+//         authorID: 1
+//     }
+// );
 
 app.put('/posts/:id', (req, res) => {
     const users = {
@@ -136,8 +141,8 @@ app.put('/posts/:id', (req, res) => {
         email: req.body.email,
         password: req.body.password,
     };
-    Posts.update(posts, { where: {id: req.params.id}})
-    .then( post => res.json(post))
+    Post.update(post, { where: {id: req.params.id}})
+    .then( posts => res.json(posts))
     .catch(err => res.json({Error: err}))
 
 });
@@ -145,7 +150,7 @@ app.put('/posts/:id', (req, res) => {
 app.delete('/posts/:id', (req, res) =>{
 
     Post.destroy({ where: {id: req.params.id}})
-    .then( post => res.json(post))
+    .then( posts => res.json(posts))
     .catch(err => res.json({Error: err}))
  });
 // *******************************************************
@@ -184,7 +189,7 @@ app.post('/users', (req, res) => {
     console.log("[users]",req.body);
 
     User.create(users)
-        .then( user => res.json(user))
+        .then( users => res.json(users))
         .catch(err => res.json({Error: err}));
 
 });
@@ -201,7 +206,7 @@ app.put('/users/:id', (req, res) => {
     };
 
     User.update(users, { where: {id: req.params.id}})
-    .then( user => res.json(user))
+    .then( users => res.json(users))
     .catch(err => res.json({Error: err}))
 
     });
@@ -223,7 +228,7 @@ app.put('/users/:id', (req, res) => {
 app.delete('/users/:id', (req, res) =>{
 
     User.destroy({ where: {id: req.params.id}})
-    .then( user => res.json(user))
+    .then( users => res.json(users))
     .catch(err => res.json({Error: err}))
  });
 
