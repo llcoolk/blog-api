@@ -117,7 +117,7 @@ app.post('/posts', (req, res) => {
         authorID: req.body.authorID
     };
 
-    console.log("[posts", req.body);
+    console.log("[posts]", req.body);
 
     Posts.create(posts)
     .then( posts => res.json( posts))
