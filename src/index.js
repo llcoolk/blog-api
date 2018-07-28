@@ -87,11 +87,13 @@ const Posts = sequelize.define('posts', {
         type: Sequelize.INTEGER,
         allowNull: false
     }
-    // references: {
-    //     model: 'users',
-    //     key: 'id'
-  },
-  {
+//     ,
+//     references: {
+//         model: 'users',
+//         key: 'id'
+//   }
+},
+{
     timeStamps: false,
     freezeTableName: true
 }
@@ -117,12 +119,12 @@ app.post('/posts', (req, res) => {
 
     Posts.sync({force: true}).then(() => {
         return posts.create(
-            {
-                title: "I know what you did last night!",
-                description: "But I won't tell your mommy~",
-                imageUrl: './assets/placeholder.png',
-                authorID: 1
-            }
+        {
+            title: "I know what you did last night!",
+            description: "But I won't tell your mommy~",
+            imageUrl: './assets/placeholder.png',
+            authorID: 1
+        }
         );
     });
 });
