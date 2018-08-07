@@ -2,8 +2,6 @@ const Sequelize = require('sequelize');
 const sequelize = require('./index');
 const User = require('./User');
 
-
-
 // Post table model
 const Post = sequelize.define(
   'Post', {
