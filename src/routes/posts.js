@@ -26,9 +26,9 @@ router.post("/", (req, res) => {
   };
 
   Post.create(newPost)
-    .then(post => res.json(post))
+    .then(post => res.status(201).json(post))
     .catch(err =>
-      res.json({
+      res.status(422).json({
         Error: err
       })
     );
@@ -57,10 +57,11 @@ router.put("/:id", (req, res) => {
       PostId: req.params.id
     }
   })
-    .then(post => res.json(post))
+    .then(post => res.json({ updated: true }))
     .catch(err =>
       res.json({
-        Error: err
+        updated: false,
+        message: err
       })
     );
 });
