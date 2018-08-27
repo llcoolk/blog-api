@@ -1,83 +1,18 @@
 const router = require("express").Router();
 const Post = require("../models/Post");
+const isAuth = require("../middlewares/isAuth");
+const postCtrl = require("../controllers/posts");
 
 router.get("/", (req, res) => {
   Post.findAll({}).then(posts => {
     res.json(posts);
   });
 });
-router.get("/:id", (req, res) => {
-  Post.findOne({
-    where: {
-      PostId: req.params.id
-    }
-  }).then(post => {
-    console.log(post);
-    res.json(post);
-  });
-});
+router.get("/:id", postCtrl.getOne);
 
-router.post("/", (req, res) => {
-  const newPost = {
-    title: req.body.title,
-    description: req.body.description,
-    imageUrl: req.body.imageUrl,
-    UserId: req.body.UserId
-  };
+router.post("/", isAuth, postCtrl.create);
 
-  Post.create(newPost)
-    .then(post => res.status(201).json(post))
-    .catch(err =>
-      res.status(422).json({
-        Error: err
-      })
-    );
-});
-
-router.put("/:id", (req, res) => {
-  const { title, description, imageUrl, UserId } = req.body;
-
-  const updatedPost = {};
-
-  if (title) {
-    updatedPost.title = title;
-  }
-  if (description) {
-    updatedPost.description = description;
-  }
-  if (imageUrl) {
-    updatedPost.imageUrl = imageUrl;
-  }
-  if (UserId) {
-    updatedPost.UserId = UserId;
-  }
-
-  Post.update(updatedPost, {
-    where: {
-      PostId: req.params.id
-    }
-  })
-    .then(post => res.json({ updated: true }))
-    .catch(err =>
-      res.json({
-        updated: false,
-        message: err
-      })
-    );
-});
-
-router.delete("/:id", (req, res) => {
-  Post.destroy({
-    where: {
-      PostId: req.params.id
-    }
-  })
-    .then(posts => res.json(posts))
-    .catch(err =>
-      res.json({
-        Error: err
-      })
-    );
-});
+router.put("/:id", postCtrl.update);
+router.delete("/:id", isAuth, postCtrl.remove);
 
 module.exports = router;

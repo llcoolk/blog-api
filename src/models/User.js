@@ -1,24 +1,21 @@
-const Sequelize = require('sequelize');
-const sequelize = require('./index');
-
+const Sequelize = require("sequelize");
+const sequelize = require("./index");
 
 // User tabel model
 const User = sequelize.define(
-  'User', {
-
+  "User",
+  {
     firstName: {
       type: Sequelize.STRING,
-      allowNull: false,
       validate: {
-        len: [1, 100],
-      },
+        len: [1, 100]
+      }
     },
     lastName: {
       type: Sequelize.STRING,
-      allowNull: false,
       validate: {
-        len: [1, 100],
-      },
+        len: [1, 100]
+      }
     },
     email: {
       type: Sequelize.STRING,
@@ -26,19 +23,20 @@ const User = sequelize.define(
       allowNull: false,
       validate: {
         len: [1, 30],
-        isEmail: true,
-      },
+        isEmail: true
+      }
     },
     password: {
       type: Sequelize.STRING,
-      allowNull: false,
-      validate: {
-        len: [1, 30],
-      },
-    },
-  }, {
+      allowNull: false
+      // validate: {
+      //   len: [1, 30]
+      // }
+    }
+  },
+  {
     timestamps: false,
-    freezeTableName: true,
+    freezeTableName: true
   }
 );
 

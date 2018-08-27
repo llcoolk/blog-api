@@ -1,5 +1,7 @@
 const router = require("express").Router();
 const User = require("../models/User");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 router.get("/", (req, res) => {
   User.findAll({}).then(users => {
@@ -37,24 +39,55 @@ router.put("/:id", (req, res) => {
       })
     );
 });
-router.post("/", (req, res) => {
-  const user = {
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    email: req.body.email,
-    password: req.body.password
-  };
 
-  //  console.log('[users]', req.body);
-
-  User.create(user)
-    .then(createdUser => res.status(201).json(createdUser))
-    .catch(err =>
-      res.status(409).json({
+router.post("/signup", (req, res, next) => {
+  bcrypt.hash(req.body.password, 10, (err, hash) => {
+    if (err) {
+      return res.status(500).json({
         Error: err
-      })
-    );
+      });
+    } else {
+      console.log("hashedPass:", hash);
+      const newUser = {
+        email: req.body.email,
+        password: hash
+      };
+
+      User.create(newUser)
+        .then(result => {
+          console.log(result);
+          res.status(201).json({
+            message: "User created."
+          });
+        })
+        .catch(err => {
+          console.log(err);
+          res.status(500).json({
+            error: err
+          });
+        });
+    }
+  });
 });
+
+// router.post("/", (req, res) => {
+//   const user = {
+//     firstName: req.body.firstName,
+//     lastName: req.body.lastName,
+//     email: req.body.email,
+//     password: req.body.password
+//   };
+
+//   //  console.log('[users]', req.body);
+
+//   User.create(user)
+//     .then(createdUser => res.status(201).json(createdUser))
+//     .catch(err =>
+//       res.status(409).json({
+//         Error: err
+//       })
+//     );
+// });
 
 router.delete("/:id", (req, res) => {
   User.destroy({
@@ -68,6 +101,26 @@ router.delete("/:id", (req, res) => {
         Error: err
       })
     );
+});
+
+router.post("/auth", (req, res) => {
+  const { email, password } = req.body;
+
+  User.findOne({ where: { email } }).then(user => {
+    if (user !== null) {
+      bcrypt.compare(password, user.password, (err, result) => {
+        if (result) {
+          const token = jwt.sign(
+            { userId: user.id, email: user.email },
+            "shhhhhh"
+          );
+          res.json({ token });
+        } else {
+          res.json({ success: false, message: "Password is incorrect!" });
+        }
+      });
+    }
+  });
 });
 
 module.exports = router;
