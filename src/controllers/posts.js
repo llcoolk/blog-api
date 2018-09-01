@@ -81,6 +81,7 @@ const remove = (req, res, next) => {
         message: "There's no posts with the provided ID."
       });
     }
+    cd;
   });
 };
 
